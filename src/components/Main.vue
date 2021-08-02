@@ -7,15 +7,18 @@
         <hr class="my-4">
         <div class="card">
           <div class="card-body">
-            <span v-for="(word, key) in wordsData" :key='key'>
-              {{word.trim()+' '}}
+            <!--TODO: Burada space yada enter tusuna basildikca bir sonraki kelimeye gecmesini sagla.-->
+            <!-- ornegin bir counter yap ve basildikca degerini arttir-->
+            <span class="words = ms-3 m-1" :class="key===counter ? 'onWord' : '' " v-for="(word, key) in wordsData" :key='key'>
+              {{word}}
             </span>
           </div>
         </div>
       </div>
     </div>
     <div class="input-group input-group-lg" >
-      <input type="text" class="form-control">
+
+      <input type="text" class="form-control" @keydown.space="nextWord" >
       <div class="input-group-append input-group-lg">
         <button class="btn btn-outline-success ms-2" type="button">
           <i class="far fa-clock"></i>
@@ -34,8 +37,12 @@
 <script>
 export default {
   name: "Main",
+  props:{
+    name : String,
+  },
   data(){
     return {
+      counter: 0,
       wordsData: ['Lorem',
         'ipsum',
         'dolor',
@@ -67,10 +74,26 @@ export default {
         'atque',
         'reprehenderit.',],
     }
-  }
+  },
+  methods:{
+    nextWord: function(){
+      if(this.wordsData.length !==0)
+        this.counter +=1
+      if(this.counter === this.wordsData.length)
+        console.error('Kelimeler bitti')
+    },
+  },
 }
 </script>
 
 <style scoped>
-
+.words{
+  font-size: 1.5rem;
+  display: inline-block;
+}
+.onWord{
+  background-color:rgba(150,150,150,0.3);
+  padding:2px 5px;
+  border-radius: 3px;
+}
 </style>
