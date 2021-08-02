@@ -1,4 +1,4 @@
-# fast-typing
+# Ten Fast Finger
 
 ## Project setup
 ```
