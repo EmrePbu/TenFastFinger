@@ -20,9 +20,9 @@
 
       <input type="text" class="form-control" @keydown.space="nextWord" >
       <div class="input-group-append input-group-lg">
-        <button class="btn btn-outline-success ms-2" type="button">
+        <button @click='timer' class="btn btn-outline-success ms-2"  type="button">
           <i class="far fa-clock"></i>
-          1:30
+          {{ 9 >= second ? '0' + second : second }}
         </button>
         <button class="btn btn-outline-danger ms-2" type="button">
           Reset
@@ -40,9 +40,10 @@ export default {
   props:{
     name : String,
   },
-  data(){
+  "data"(){
     return {
       counter: 0,
+      second: 0,
       wordsData: ['Lorem',
         'ipsum',
         'dolor',
@@ -77,11 +78,23 @@ export default {
   },
   methods:{
     nextWord: function(){
+
       if(this.wordsData.length !==0)
         this.counter +=1
       if(this.counter === this.wordsData.length)
         console.error('Kelimeler bitti')
     },
+    timer: function(){
+      const vm = this;
+      const _timer = setInterval(function () {
+        if (vm.second >= 60) {
+          clearInterval(_timer)
+        } else {
+          vm.second += 1
+          console.log(vm.second)
+        }
+      }, 1000);
+    }
   },
 }
 </script>
