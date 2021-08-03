@@ -9,6 +9,7 @@
           <div class="card-body">
             <!--TODO: Burada space yada enter tusuna basildikca bir sonraki kelimeye gecmesini sagla.-->
             <!-- ornegin bir counter yap ve basildikca degerini arttir-->
+            <!-- Bu kisimda wordsChecked dizisindeki degerlere gore kelimelerin arka planlarini ayarla-->
             <span class="words = ms-3 m-1" :class="key===counter ? 'onWord' : '' " v-for="(word, key) in wordsData" :key='key'>
               {{word}}
             </span>
@@ -16,11 +17,12 @@
         </div>
       </div>
     </div>
-    <div class="input-group input-group-lg" >
-
-      <input type="text" class="form-control" @keydown.space="nextWord" >
+    {{inputWord}}
+    <div class="input-group input-group-lg">
+      <!-- Kelimeler bittigi zaman kelime girmeyi engelle-->
+      <input v-bind:disabled="isInputDisable" type="text" class="form-control" @keydown.space="nextWord" v-model="inputWord">
       <div class="input-group-append input-group-lg">
-        <button @click='timer' class="btn btn-outline-success ms-2"  type="button">
+        <button @click='timer' class="btn btn-outline-success ms-2 "  type="button">
           <i class="far fa-clock"></i>
           {{ 9 >= second ? '0' + second : second }}
         </button>
@@ -30,7 +32,7 @@
         </button>
       </div>
     </div>
-
+    {{wordsChecked}}
   </div>
 </template>
 
@@ -40,10 +42,13 @@ export default {
   props:{
     name : String,
   },
-  "data"(){
+  data(){
     return {
       counter: 0,
       second: 0,
+      isInputDisable: false,
+      inputWord: '',
+      wordsChecked: [],
       wordsData: ['Lorem',
         'ipsum',
         'dolor',
@@ -73,25 +78,42 @@ export default {
         'vitae!',
         'Alias,',
         'atque',
-        'reprehenderit.',],
+        'reprehenderit.',
+      ],
     }
   },
+  watch:{
+    inputWord(value){
+      value = value.trim();
+      //console.log(value)
+      //console.log(this.counter)
+      this.wordsChecked[this.counter] = value === this.wordsData[this.counter];
+    },
+  },
+
   methods:{
     nextWord: function(){
+      if(this.wordsData.length !==0) {
+        this.counter += 1
+        this.inputWord = ''
+        //console.log(this.wordsChecked)
 
-      if(this.wordsData.length !==0)
-        this.counter +=1
-      if(this.counter === this.wordsData.length)
-        console.error('Kelimeler bitti')
+      }
+      // Veri kalip kalmadigini kontrol ediyorum
+      if(this.counter === this.wordsData.length) {
+        this.isInputDisable = true
+        alert('no words left')
+      }
     },
     timer: function(){
       const vm = this;
       const _timer = setInterval(function () {
         if (vm.second >= 60) {
           clearInterval(_timer)
+          alert('no time left')
         } else {
           vm.second += 1
-          console.log(vm.second)
+          //console.log(vm.second)
         }
       }, 1000);
     }
