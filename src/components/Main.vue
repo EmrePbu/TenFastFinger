@@ -5,6 +5,10 @@
         <h1 class="display-2">Hello, {{ name }}!</h1>
         <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
         <hr class="my-4">
+        <h1 v-if="isInputDisable"
+            class="display-6">
+          GAME OVER
+        </h1>
         <div class="card">
           <div class="card-body">
             <!--TODO: Burada space yada enter tusuna basildikca bir sonraki kelimeye gecmesini sagla.-->
@@ -16,7 +20,6 @@
                   :class="checkLetter(key, word)"
                   v-for="(word, key) in wordsData"
                   :key='key'>
-              <!-- Gerekli degil ama yinede guzel duruyor.-->
               <span :class="key===counter ? 'onWord' :  '' ">
                 {{word}}
               </span>
@@ -31,18 +34,17 @@
       <!--TODO:Kelime girmeye basladigi an timer i baslat-->
       <input type="text"
              class="form-control"
-             v-bind:disabled="isInputDisable"
-             ref="customInput"
+             :disabled="isInputDisable"
              @keydown.space="nextWord"
              v-model="inputWord">
       <div class="input-group-append input-group-lg">
-        <button @click='timer(); buttonClicked();'
+        <button @click='timer'
                 class="btn btn-outline-success ms-2"
                 type="button"
-                :disabled="buttonDisabled">
+                disabled>
           <i class="far fa-clock"></i>
 
-          {{ 9 >= second ? '0' + second : second }}
+          {{ 9 >= second ? '0' + second : second }} s
         </button>
         <button class="btn btn-outline-danger ms-2" type="button">
           Reset
@@ -61,13 +63,13 @@ export default {
   props:{
     name : String,
   },
-  data(){
+  'data'(){
     return {
-      counter: 0,
+      counter: -1,
       second: 0,
+      trueCount: 0,
       isInputDisable: false,
-      buttonDisabled: false,
-      isTrue:'',
+      isTrueCss:'',
       inputWord: '',
       wordsChecked: [],
       //http://asdfast.beobit.net/docs/
@@ -102,7 +104,6 @@ export default {
         'atque',
         'reprehenderit.',
       ],
-
     }
   },
   watch:{
@@ -120,57 +121,78 @@ export default {
       if (value !== '') {
         //.slice(0, value.length)
         //this.wordsChecked[this.counter] = value.replace(' ', '') === this.wordsData[this.counter].replace(' ', '');
-        this.wordsChecked[this.counter] = value.trim() === this.wordsData[this.counter].trim();
-
-        this.isTrue = 'bg-success'
+        if (this.counter === -1){
+          this.timer()
+        }
+        else{
+          this.wordsChecked[this.counter] = value.trim() === this.wordsData[this.counter].trim();
+          this.isTrueCss = 'bg-success'
+        }
       }
       else {
         this.wordsChecked[this.counter] = false
-        this.isTrue = 'bg-danger'
+        this.isTrueCss = 'bg-danger'
       }
     },
-    /*isTrue: function(value){
+    /*isTrueCss: function(value){
       if (value !== '') {
-        this.isTrue = 'bg-true'
+        this.isTrueCss = 'bg-true'
       }
       else{
-        this.isTrue= 'bg-false'
+        this.isTrueCss= 'bg-false'
       }
     }*/
   },
 
   methods:{
     nextWord: function(){
+
       if(this.wordsData.length !==0) {
+        console.log()
+        this.inputWord.replace(' ', '') === this.wordsData[this.counter] ? this.trueCount ++ : null
+        console.log(`trueCount ${this.trueCount}`)
+        console.log(`falseCount ${this.wordsChecked.length - this.trueCount}`)
         this.counter += 1
         this.inputWord = ''
         //console.log(this.wordsChecked)
+      }
 
-      }
       // Veri kalip kalmadigini kontrol ediyorum
-      if(this.counter === this.wordsData.length) {
-        //this.isInputDisable = true
+      /**if(this.counter === this.wordsData.length) {
+        this.isInputDisable = true
         alert('no words left')
-        this.isInputDisable = !this.isInputDisable
-        this.buttonDisabled = !this.buttonDisabled
-      }
-    },
-    buttonClicked: function(){
-      this.buttonDisabled= !this.buttonDisabled
+        this.isInputDisable = true
+      }*/
     },
     // Zaman kontrolunu yapiyorum burada
     timer: function(){
-      const vm = this;
-      this.$refs.customInput.focus()
-      const _timer = setInterval(function () {
-        if (vm.second >= 60) {
-          clearInterval(_timer)
-          alert('no time left')
-        } else {
-          vm.second += 1
-          //console.log(vm.second)
-        }
-      }, 1000);
+      if (this.counter === -1){
+        this.counter = 0
+        //this.$refs.customInput.focus()
+        const vm = this;
+        const _timer = setInterval(()=>{
+          if (vm.second >= 5) {
+            alert('no time left')
+            /*
+              sakin silme
+            if (this.inputWord !== ' ') {
+              console.log(this.wordsChecked.length)
+            }
+            else{
+              console.log(this.wordsChecked.length-1)
+            }*/
+            clearInterval(_timer)
+            this.isInputDisable = true
+          } else {
+            vm.second += 1
+            //console.log(vm.second)
+          }
+        }, 1000);
+      }
+      /*else{
+        console.log('emre')
+      }*/
+
     },
     checkLetter : function (key, value){
      /* console.log(this.wordsData[key].length)
@@ -182,7 +204,7 @@ export default {
       else if(this.wordsChecked[key] === false ){//&& this.wordsData[key] !== value
         return 'bg-false'
       }
-    }
+    },
   },
 }
 </script>
