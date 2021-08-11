@@ -1,5 +1,5 @@
 <template>
-  <Main name='Emre'></Main>
+  <Main></Main>
 </template>
 
 <script>
