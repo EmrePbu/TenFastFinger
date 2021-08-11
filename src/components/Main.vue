@@ -2,16 +2,11 @@
   <div class="container">
     <div class="jumbotron" v-if="!isInputDisable">
       <div class="mt-5 alert alert-success">
-        <h1 class="display-2">Hello {{name}}</h1>
-        <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+        <h1 class="display-2">and You the fastest shifter alive</h1>
+        <p class="lead"> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, atque consequatur dolor dolore dolorum esse id iste iure </p>
         <hr class="my-4">
-        <!--<h1>true: {{trueCount}}  false:{{falseCount}}</h1>-->
         <div class="card">
           <div class="card-body">
-            <!--TODO: Burada space yada enter tusuna basildikca bir sonraki kelimeye gecmesini sagla.-->
-            <!-- ornegin bir counter yap ve basildikca degerini arttir-->
-            <!-- Bu kisimda wordsChecked dizisindeki degerlere gore kelimelerin arka planlarini ayarla-->
-
             <!--:class="checkLetter(key, word)"-->
             <span class="words ms-3 m-1 "
                   :class="checkLetter(key, word)"
@@ -25,12 +20,9 @@
         </div>
       </div>
     </div>
-    <!--{{inputWord}}-->
     <ScoreBoard v-if="isInputDisable" :accuracy='accuracy' :trueValue='trueCount' :falseValue='falseCount'></ScoreBoard>
     <div class="input-group input-group-lg"
          v-if="!isInputDisable">
-      <!--TODO: Kelimeler bittigi zaman kelime girmeyi engelle-->
-      <!--TODO:Kelime girmeye basladigi an timer i baslat-->
       <input type="text"
              class="form-control"
              :disabled="isInputDisable"
@@ -45,7 +37,8 @@
 
           {{ 9 >= second ? '0' + second : second }} s
         </button>
-        <button class="btn btn-outline-danger ms-2" type="button">
+        <!--TODO: Timer resetle-->
+        <button class="btn btn-outline-danger ms-2" type="button" @click='getWords'>
           Reset
           <i class="fas fa-undo-alt"></i>
         </button>
@@ -58,13 +51,11 @@
 //import axios from 'axios'
 import ScoreBoard from "@/components/ScoreBoard";
 
-
-
 export default {
   name: "Main",
-  props:{
+  /*props:{
     name : String,
-  },
+  },*/
   components:{
     ScoreBoard,
   },
@@ -74,13 +65,12 @@ export default {
       second: 60,
       trueCount: 0,
       falseCount: 0,
-      accuracy: Number,
+      accuracy: 0,
       isInputDisable: false,
-      isTrueCss:'',
       inputWord: '',
       wordsChecked: [],
-      //http://asdfast.beobit.net/docs/
-      wordsData: [
+      wordsData:[],
+      /* [
         '1a',
         '2',
         '3',
@@ -115,7 +105,39 @@ export default {
         '32',
         '33',
         '34',
-      ],
+        '27',
+        '28',
+        '29',
+        '30',
+        '31',
+        '32',
+        '33',
+        '34',
+        '27',
+        '28',
+        '29',
+        '30',
+        '31',
+        '32',
+        '33',
+        '34',
+        '27',
+        '28',
+        '29',
+        '30',
+        '31',
+        '32',
+        '33',
+        '34',
+        '27',
+        '28',
+        '29',
+        '30',
+        '31',
+        '32',
+        '33',
+        '34',
+      ]*/
     }
   },
   watch:{
@@ -138,12 +160,10 @@ export default {
         }
         else{
           this.wordsChecked[this.counter] = value.trim() === this.wordsData[this.counter].trim();
-          this.isTrueCss = 'bg-success'
         }
       }
       else {
         this.wordsChecked[this.counter] = false
-        this.isTrueCss = 'bg-danger'
       }
     },
   },
@@ -154,6 +174,9 @@ export default {
           .then(response => response.json())
           .then(data => this.wordsData = data);
     },
+    timerReset: function(){
+      clearInterval()
+    },
     nextWord: function(){
       if(this.wordsData.length !==0) {
         //TODO: Hata var kontrol et ilk basta bosluk girilirse
@@ -162,6 +185,7 @@ export default {
         this.inputWord = ''
         if (this.counter >= 20){
           this.wordsData.splice(0,20)
+          this.counter =0
         }
       }
 
@@ -193,7 +217,7 @@ export default {
             * We then multiply by number with 100 before rounding to extract only the two digits after the decimal place.
             * Finally, we divide the number by 100 to get a max of 2 decimal places.
             * */
-            this.accuracy=  Math.round((this.trueCount * 100 / (this.trueCount+this.falseCount) + Number.EPSILON) * 100) / 100
+            this.accuracy = Math.round((this.trueCount * 100 / (this.trueCount+this.falseCount) + Number.EPSILON) * 100) / 100
 
             clearInterval(_timer)
             this.isInputDisable = true
@@ -203,6 +227,7 @@ export default {
         }, 1000);
       }
     },
+    //TODO: 20 kelime sonra css leri resetle
     checkLetter : function (key, value){
       if (this.wordsChecked[key] === true  && this.wordsData[key].length === value.length){
         return 'bg-true'
@@ -213,7 +238,7 @@ export default {
     },
   },
   beforeMount() {
-    //this.getWords()
+    this.getWords()
   }
 }
 </script>
