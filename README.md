@@ -24,6 +24,8 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 🔜 TODO: 20 kelime sonra css leri resetle
+
 🔜 TODO: Timer resetle
+
 🔜 TODO: Ilk basta bosluk girilmesini engelle
  
