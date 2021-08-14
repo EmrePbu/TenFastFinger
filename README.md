@@ -28,4 +28,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 🔜 TODO: Timer resetle
 
 🔜 TODO: Ilk basta bosluk girilmesini engelle
+
+🔜 TODO: Girisleri siniflandirmayi duzelt(true,false count)
  
