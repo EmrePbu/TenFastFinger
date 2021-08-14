@@ -53,9 +53,6 @@ import ScoreBoard from "@/components/ScoreBoard";
 
 export default {
   name: "Main",
-  /*props:{
-    name : String,
-  },*/
   components:{
     ScoreBoard,
   },
@@ -90,12 +87,11 @@ export default {
         if (this.counter === -1){
           this.timer()
         }
-        else{
+        else if(this.counter !==-1){
+
+          //console.log(value.trim() === this.wordsData[this.counter].trim())
           this.wordsChecked[this.counter] = value.trim() === this.wordsData[this.counter].trim();
         }
-      }
-      else {
-        this.wordsChecked[this.counter] = false
       }
     },
   },
@@ -106,18 +102,15 @@ export default {
           .then(response => response.json())
           .then(data => this.wordsData = data);
     },
-    timerReset: function(){
-      clearInterval()
-    },
     nextWord: function(){
       if(this.wordsData.length !==0) {
         //TODO: Hata var kontrol et ilk basta bosluk girilirse
-        this.inputWord.replace('', '') === this.wordsData[this.counter].replace(' ', '') ? this.trueCount ++ : this.falseCount++
+        this.inputWord.replace(' ', '') === this.wordsData[this.counter].replace(' ', '') ? this.trueCount ++ : this.falseCount++
         this.counter += 1
         this.inputWord = ''
         if (this.counter >= 20){
+          // TODO: Burada kelimeleri degistirirken cssleride resetle
           this.wordsData.splice(0,20)
-          this.counter =0
         }
       }
 
