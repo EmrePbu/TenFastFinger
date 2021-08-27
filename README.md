@@ -1,5 +1,13 @@
 # Ten Fast Finger
 
+
+<img src="https://github.com/EmrePbu/TenFastFinger/blob/master/_images/ss1.png" alt="tff1" style="zoom:33%;" />
+
+<img src="https://github.com/EmrePbu/TenFastFinger/blob/master/_images/ss2.png" alt="tff2" style="zoom:33%;" />
+
+
+
+
 ## Project setup
 ```
 npm install
